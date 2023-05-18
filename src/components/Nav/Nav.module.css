@@ -1,0 +1,32 @@
+.root {
+  height: 50px;
+  background-color: #ced4da;
+}
+
+.links {
+  height: 100%;
+  display: flex;
+  list-style: none;
+  padding: 0 1rem;
+  justify-content: center;
+  align-items: center;
+}
+
+.linkWrapper {
+  height: 100%;
+}
+
+.linkWrapper:not(:first-child) {
+  margin-left: 1rem;
+}
+
+.link {
+  display: flex;
+  height: 100%;
+  align-items: center;
+}
+
+.linkActive {
+  composes: link;
+  border: 1px solid gray;
+}
