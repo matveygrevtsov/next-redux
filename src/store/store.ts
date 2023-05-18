@@ -1,24 +1,19 @@
-// Это глобальный стор для приложения, который объединяет логику всех слайсов.
-import { configureStore, ThunkAction, Action } from "@reduxjs/toolkit";
-import { authSlice } from "./authSlice";
-import { createWrapper } from "next-redux-wrapper";
+import { configureStore, combineReducers } from "@reduxjs/toolkit";
+import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
+import { tasksApi } from "./tasksApi";
 
-const makeStore = () =>
-  configureStore({
-    reducer: {
-      [authSlice.name]: authSlice.reducer,
-    },
-    devTools: true,
-  });
+const rootReducer = combineReducers({
+  [tasksApi.reducerPath]: tasksApi.reducer,
+});
 
-// ReturnType<typeof F> - это тип данных, которые возвращает функция F.
-export type AppStore = ReturnType<typeof makeStore>;
-export type AppState = ReturnType<AppStore["getState"]>;
-export type AppThunk<ReturnType = void> = ThunkAction<
-  ReturnType,
-  AppState,
-  unknown,
-  Action
->;
+export const store = configureStore({
+  reducer: rootReducer,
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware().concat(tasksApi.middleware),
+});
 
-export const wrapper = createWrapper<AppStore>(makeStore);
+export type ReduxState = ReturnType<typeof store.getState>;
+export type ReduxDispatch = typeof store.dispatch;
+
+export const useAppDispatch = () => useDispatch<ReduxDispatch>();
+export const useAppSelector: TypedUseSelectorHook<ReduxState> = useSelector;
